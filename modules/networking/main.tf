@@ -3,16 +3,16 @@
 data "aws_availability_zones" "available" {}
 
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
-  name                             = "${var.namespace}-vpc"
-  cidr                             = "10.240.0.0/16"
-  azs                              = data.aws_availability_zones.available.names
-  private_subnets                  = ["10.240.1.0/24", "10.240.3.0/24"] # public == odd number 3rd octet
-  public_subnets                   = ["10.240.2.0/24", "10.240.4.0/24"] # private == even number 3rd octet
+  source          = "terraform-aws-modules/vpc/aws"
+  name            = "${var.namespace}-vpc"
+  cidr            = "10.240.0.0/16"
+  azs             = data.aws_availability_zones.available.names
+  private_subnets = ["10.240.1.0/24", "10.240.3.0/24"] # public == odd number 3rd octet
+  public_subnets  = ["10.240.2.0/24", "10.240.4.0/24"] # private == even number 3rd octet
   #assign_generated_ipv6_cidr_block = true
-  create_database_subnet_group     = true
-  enable_nat_gateway               = true
-  single_nat_gateway               = true
+  create_database_subnet_group = true
+  enable_nat_gateway           = true
+  single_nat_gateway           = true
 }
 
 // SG to allow SSH connections from anywhere
@@ -52,8 +52,8 @@ resource "aws_security_group" "allow_ssh_priv" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    # cidr_blocks = ["10.240.0.0/16"]
-    cidr_blocks = module.vpc.cidr
+    cidr_blocks = ["10.240.0.0/16"]
+    # cidr_blocks = module.vpc.
   }
 
   egress {
